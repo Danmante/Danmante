@@ -1,52 +1,70 @@
+<p align="center">
+  <img src="./danmante-logo.png" alt="Danmante logo" width="140" />
+</p>
+
 # Danmante
 
-**Healthcare access, connected.**
+<p align="center">
+  <strong>Healthcare access, connected.</strong>
+</p>
 
-Danmante is an open engineering foundation for jurisdiction-aware digital health workflows connecting patients, healthcare professionals, and pharmacies. The project is founded by Johnny Dubic and is designed for international expansion without treating healthcare as a cryptocurrency product.
+Danmante is an open engineering foundation for jurisdiction-aware digital health workflows connecting patients, healthcare professionals, and pharmacies. The project is designed for international expansion without treating healthcare as a speculative crypto product or a casual marketing layer.
 
-The public website is available as a static Next.js experience. It communicates the product direction and prepared workflows honestly; it is not a live clinical service.
+The repository includes a public static website, a safety-first architecture, a jurisdiction rules foundation, and a strong compliance-oriented project narrative. It is intentionally transparent about what is implemented versus what still requires external legal, clinical, and operational review.
 
-## What is included
+## Why Danmante
 
-- Responsive public website with accessible mobile navigation
-- Patient, nurse, pharmacy, operations, safety, company, sign-in, and legal routes
-- Fail-closed jurisdiction rules engine with regression tests
-- Fastify API scaffold and foundational relational schema
-- Testable Fastify app factory with jurisdiction and readiness boundary tests
-- Root-level Docker/Compose API foundation for private infrastructure
-- Playwright browser E2E and axe accessibility coverage for implemented public journeys
-- Static export configuration for GitHub Pages
-- GitHub Actions quality and Pages deployment workflows
-- Draft privacy, terms, cookie, and accessibility content requiring review
+- Builds trust around access, identity, and clinical boundaries
+- Keeps jurisdiction, safety, and readiness logic explicit
+- Connects patient, nurse, pharmacy, and operational workflows in one architecture
+- Maintains a responsible public-facing interface without claiming live clinical service delivery
+- Creates a foundation that can grow into regulated healthcare operations with proper review
 
 ## Current status
 
-**NOT YET READY for regulated production deployment.**
+> Danmante is not yet ready for regulated production deployment.
 
-Implemented: public website, static export, design system, route structure, metadata, jurisdiction foundation, test/build pipeline, and honest status messaging.
+### Implemented
 
-Prepared: patient/professional/pharmacy/admin information architecture, authentication entry points, verification concepts, payment boundaries, multilingual extension points, and API integration surfaces.
+- Public website and static export for GitHub Pages
+- Accessible responsive navigation and landing pages
+- Role-based public journeys for patients, nurses, pharmacies, and administrators
+- Safety and trust content layers
+- Jurisdiction rules foundation and regression tests
+- API scaffold, database schema, and app factory patterns
+- CI and deployment automation
 
-Not implemented: production authentication and RBAC, real patient records, live consultations, professional or pharmacy verification, clinical documentation, payment provider integration, operational monitoring, and external clinical/legal/security review.
+### Prepared
+
+- Professional identity and onboarding flows
+- Pharmacy verification and fulfillment processes
+- Multilingual and regional content architecture
+- API integration surfaces for future operations
+
+### Not yet implemented
+
+- Production authentication and RBAC
+- Real patient records or PHI handling
+- Clinical consultations, documentation, or prescribing workflows
+- Payment provider integrations
+- Monitoring, alerting, and incident tooling for regulated deployment
+- External legal, privacy, clinical, and security review
 
 See [PRODUCTION_BLOCKERS.md](PRODUCTION_BLOCKERS.md) and [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md).
 
-## Architecture
+## Repository structure
 
-- `app/`: Next.js App Router website and static metadata routes
-- `app/components/`: shared navigation, footer, page-frame, role, and legal surfaces
-- `src/`: jurisdiction and domain foundation
+- `app/`: Next.js App Router site and static metadata routes
+- `app/components/`: shared navigation, footer, page-frame, and role-based UI
+- `src/`: core domain logic and jurisdiction foundation
 - `packages/jurisdiction/`: reusable jurisdiction package
-- `packages/security/`: security foundation package
-- `server.ts`, `routes/`: Fastify/API scaffold
-- `app.ts`: reusable Fastify application factory for API tests and private deployment
+- `packages/security/`: security foundations
+- `server.ts`, `routes/`, `app.ts`: API and app scaffolding
 - `schema.sql`, `0001_init.sql`: database foundation
-- `tests/`, `engine.test.ts`: regression coverage
-- `docs/`: audit, architecture, safety, operations, and readiness documentation
+- `tests/`, `engine.test.ts`: verification and regression coverage
+- `docs/`: architecture, operations, compliance, and readiness documentation
 
-The existing healthcare, security, jurisdiction, and database architecture remains the source of truth. The website does not bypass server-side controls or claim to replace them.
-
-## Local development
+## Quick start
 
 Requirements: Node.js 20 and npm.
 
@@ -55,9 +73,21 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open:
 
-Environment examples are provided in `.env.example`, `.env.development.example`, `.env.staging.example`, `.env.production.example`, and `.env.test.example`. Never expose server secrets through `NEXT_PUBLIC_*` variables.
+```text
+http://localhost:3000
+```
+
+Environment examples are included in:
+
+- [.env.example](.env.example)
+- [.env.development.example](.env.development.example)
+- [.env.staging.example](.env.staging.example)
+- [.env.production.example](.env.production.example)
+- [.env.test.example](.env.test.example)
+
+Never expose secrets through `NEXT_PUBLIC_*` variables.
 
 ## Verification
 
@@ -69,41 +99,60 @@ npm run test:e2e
 npm run build
 ```
 
-The normal build uses static export because the public website is Pages-compatible. The explicit Pages build is:
+Static export for GitHub Pages:
 
 ```bash
 npm run build:pages
 ```
 
-## GitHub Pages
+## GitHub Pages deployment
 
-The deployment workflow is [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml). It runs install, lint, typecheck, tests, static build, artifact upload, and Pages deployment on pushes to `main` or manual dispatch.
+The deployment workflow lives in [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml).
 
-Expected project URL after GitHub Pages is enabled for the repository:
+It performs:
 
-`https://danmante.github.io/Danmante/`
+- dependency installation
+- linting
+- type checks
+- unit tests
+- static export
+- artifact upload
+- Pages deployment
 
-The repository uses `/Danmante` as the Pages base path in Actions, trailing-slash routes, unoptimized static-compatible images, and generated sitemap/robots metadata. Deployment is not claimed as live until the GitHub Pages environment actually reports success.
+Expected URL after GitHub Pages is enabled:
+
+```text
+https://danmante.github.io/Danmante/
+```
 
 ## Security and healthcare safety
 
+Danmante is designed around safety-first assumptions:
+
 - No secrets, database credentials, or private payment keys belong in the static frontend.
-- PHI, diagnoses, clinical notes, prescriptions, and patient records must remain off-chain.
-- Digital assets, if integrated later, are payment rails only and must not determine clinical eligibility.
-- Unsupported or unclear jurisdictions must fail closed.
-- AI is assistive only where implemented and cannot independently diagnose, prescribe, or override professional judgment.
+- PHI, diagnoses, clinical notes, prescriptions, and patient records remain off-chain.
+- Digital assets, if integrated later, are only payment rails and must never determine clinical eligibility.
+- Unsupported or unclear jurisdictions fail closed.
+- AI is assistive only where implemented and does not independently diagnose, prescribe, or override professional judgment.
 - Danmante is not an emergency service. In an emergency, contact local emergency services immediately.
 
-Read [SECURITY.md](SECURITY.md), [CLINICAL_SAFETY.md](CLINICAL_SAFETY.md), [PRIVACY.md](PRIVACY.md), and [PRODUCTION_BLOCKERS.md](PRODUCTION_BLOCKERS.md).
+Review:
 
-## Internationalization
+- [SECURITY.md](SECURITY.md)
+- [CLINICAL_SAFETY.md](CLINICAL_SAFETY.md)
+- [PRIVACY.md](PRIVACY.md)
+- [PRODUCTION_BLOCKERS.md](PRODUCTION_BLOCKERS.md)
 
-English is the default public language. The route and content structure is ready to support Haitian Creole, French, and Spanish through a future locale layer. Availability and healthcare services depend on local laws, licensing, and supported jurisdictions; the website does not claim universal availability.
+## Internationalization and compliance
 
-## Legal and compliance
+English is the default public language. The routing and content structure is prepared for future expansion into Haitian Creole, French, and Spanish.
 
-Privacy, terms, cookies, and accessibility pages are drafts. They are not legal advice and do not claim HIPAA certification, GDPR certification, FDA approval, government approval, or universal healthcare authorization. External legal, privacy, clinical, security, regulatory, and professional review is required before regulated deployment.
+Legal and compliance materials are draft guidance, not legal advice. They do not claim HIPAA certification, GDPR certification, FDA approval, government approval, or universal healthcare authorization. External legal, privacy, clinical, security, regulatory, and professional review remains required before regulated deployment.
 
 ## License
 
 MIT.
+
+## Project vision
+
+Danmante aims to become a trustworthy digital foundation for healthcare access, professional workflows, and jurisdiction-aware operations without overselling readiness. The project is intentionally honest about boundaries, safety, and compliance so future expansion can happen with real institutional confidence.
