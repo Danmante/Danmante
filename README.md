@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="./danmante-logo.png" alt="Danmante logo" width="140" />
+  <img src="./docs/project-banner.svg" alt="Danmante project banner" width="960" />
+</p>
+
+<p align="center">
+  <img src="./danmante-logo.png" alt="Danmante logo" width="120" />
 </p>
 
 # Danmante
@@ -195,10 +199,18 @@ Project health and leadership:
 
 - [CHANGELOG.md](CHANGELOG.md)
 - [docs/ROADMAP.md](docs/ROADMAP.md)
+- [docs/VERSIONING.md](docs/VERSIONING.md)
+- [docs/GITHUB_DISCUSSIONS.md](docs/GITHUB_DISCUSSIONS.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - [SECURITY.md](SECURITY.md)
 - [PRODUCTION_BLOCKERS.md](PRODUCTION_BLOCKERS.md)
+
+Join the conversation:
+
+- [GitHub Discussions](https://github.com/Danmante/Danmante/discussions)
+- [Issues](https://github.com/Danmante/Danmante/issues)
+- [Pull requests](https://github.com/Danmante/Danmante/pulls)
 
 ## Open-source readiness checklist
 
@@ -209,6 +221,7 @@ Project health and leadership:
 - [x] automation for releases and pages deployment
 - [x] governance and maintainer structure
 - [x] safety and compliance boundaries documented
+- [x] versioning, release management, and discussion guidance
 
 ## License
 
