@@ -1,0 +1,33 @@
+name: Question
+description: Ask a product, architecture, safety, or contributor question
+title: ""
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for asking a question about Danmante.
+        Please keep it focused on implementation, design, safety, or contributor guidance.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What do you want to understand?
+      placeholder: Describe the question, context, and any relevant files or flows.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Include any background, links, or constraints.
+      placeholder: Add links, reproduction steps, or relevant project references.
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Desired outcome
+      description: What result would help you most?
+      placeholder: Explain what kind of answer or guidance you are looking for.

@@ -191,11 +191,24 @@ Legal and compliance materials are draft guidance, not legal advice. They do not
 
 Danmante is designed to be transparent, safe, and contributor-friendly. We welcome thoughtful issues, pull requests, and ideas that improve the project without overstating readiness or misrepresenting clinical safety.
 
-Please review:
+Project health and leadership:
 
+- [CHANGELOG.md](CHANGELOG.md)
+- [docs/ROADMAP.md](docs/ROADMAP.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - [SECURITY.md](SECURITY.md)
+- [PRODUCTION_BLOCKERS.md](PRODUCTION_BLOCKERS.md)
+
+## Open-source readiness checklist
+
+- [x] clear project vision and honest maturity model
+- [x] community documentation and contribution guide
+- [x] roadmap and changelog
+- [x] issue templates and contributor workflows
+- [x] automation for releases and pages deployment
+- [x] governance and maintainer structure
+- [x] safety and compliance boundaries documented
 
 ## License
 
