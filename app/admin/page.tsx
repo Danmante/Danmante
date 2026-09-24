@@ -1,0 +1,5 @@
+import { RolePage } from "../components/role-page";
+
+export default function AdminPage() {
+  return <RolePage eyebrow="For operations" title="Governance you can audit." description="The administrative layer is designed to make verification, jurisdiction rules, incidents, security events, and platform health visible to authorized operators." status="Admin architecture prepared" statusDetail="Server-side RBAC, immutable audit enforcement, and production monitoring are not yet deployed. This page exposes no administrative controls." cta="Review the safety model" ctaHref="/safety"><section className="content-section"><h2>Operational surfaces for a regulated foundation.</h2><p>Future administrators will need a clear view of what changed, who changed it, why it changed, and what evidence supports the decision.</p><ul className="feature-list"><li>User and role management</li><li>Professional and pharmacy verification review</li><li>Jurisdiction and rule version control</li><li>Security events and incident response</li><li>Audit log inspection and export</li><li>Health checks and deployment status</li></ul></section></RolePage>;
+}

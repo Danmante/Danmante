@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: danmante
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DB: danmante_dev
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U danmante"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  api:
+    build: .
+    depends_on: [postgres, redis]
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: postgresql://danmante:changeme@postgres:5432/danmante_dev
+      REDIS_URL: redis://redis:6379
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    ports: ["4000:4000"]
+
+volumes:
+  pgdata:

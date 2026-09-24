@@ -1,0 +1,5 @@
+import { PageFrame } from "../components/page-frame";
+
+export default function AboutPage() {
+  return <PageFrame><main className="content-shell"><section className="page-hero"><p className="eyebrow">About Danmante</p><h1>Healthcare access, connected with care.</h1><p className="lede">Founded by Johnny Dubic, Danmante is an open engineering foundation for more understandable, jurisdiction-aware healthcare workflows.</p></section><section className="content-section"><h2>Infrastructure before promises.</h2><p>The project connects patient, professional, pharmacy, safety, and payment concerns without confusing a website with a clinical service. The current repository is a buildable foundation, not a live regulated healthcare platform.</p></section><section className="content-section" id="careers"><h2>International by design.</h2><p>The frontend is prepared for English, Haitian Creole, French, and Spanish. Expansion remains subject to local laws, licensing, clinical governance, privacy requirements, and independent review.</p></section></main></PageFrame>;
+}

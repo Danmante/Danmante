@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://danmante.github.io/Danmante/sitemap.xml
