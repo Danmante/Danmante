@@ -5,6 +5,13 @@
 # Danmante
 
 <p align="center">
+  <a href="https://github.com/Danmante/Danmante/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+  <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-14.2.35-000000?logo=next.js&logoColor=white" alt="Next.js 14" /></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.5.4-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5" /></a>
+  <a href="https://danmante.github.io/Danmante/"><img src="https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?logo=github&logoColor=white" alt="GitHub Pages" /></a>
+</p>
+
+<p align="center">
   <strong>Healthcare access, connected.</strong>
 </p>
 
@@ -51,6 +58,36 @@ The repository includes a public static website, a safety-first architecture, a 
 - External legal, privacy, clinical, and security review
 
 See [PRODUCTION_BLOCKERS.md](PRODUCTION_BLOCKERS.md) and [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md).
+
+## Roadmap
+
+### Phase 1 — Foundation and trust
+
+- finalize public product narrative and navigation
+- harden static Pages deployment and domain strategy
+- improve safety messaging and governance visibility
+- strengthen contributor documentation and issue tracking
+
+### Phase 2 — Operational readiness
+
+- formalize identity, access, and jurisdiction rules
+- expand security and compliance review flows
+- define pharmacy and provider onboarding processes
+- build production-quality API boundaries and observability
+
+### Phase 3 — Clinical and regulatory maturity
+
+- integrate verified professional workflows and approvals
+- define patient and provider safety controls in production contexts
+- add external compliance and audit planning
+- prepare for healthcare-sector review and governance integration
+
+### Phase 4 — Scale responsibly
+
+- multilingual and regional expansion
+- interoperability and data portability strategy
+- operational adoption in supported jurisdictions only
+- continuous safety and legal review as the product evolves
 
 ## Repository structure
 
