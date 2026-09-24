@@ -1,11 +1,17 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
   return (
     <footer className="site-footer">
       <div className="footer-grid">
         <div className="footer-brand">
-          <div className="brand footer-logo"><span className="brand-mark" aria-hidden="true">D</span><strong>Danmante</strong></div>
+          <div className="brand footer-logo">
+            <Image className="brand-logo" src={`${basePath}/danmante-logo.png`} alt="" width={34} height={34} unoptimized />
+            <strong>Danmante</strong>
+          </div>
           <p>Healthcare access, connected.</p>
           <p className="footer-note">A jurisdiction-aware digital health foundation for safer access and professional workflows.</p>
         </div>

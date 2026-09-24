@@ -22,7 +22,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .site-header { position: sticky; top: 0; z-index: 20; background: rgba(247, 250, 251, 0.94); border-bottom: 1px solid rgba(215, 229, 232, 0.88); backdrop-filter: blur(16px); }
 .site-header-inner { max-width: 1240px; margin: 0 auto; min-height: 76px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); }
-.brand-mark { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--navy); color: white; font: 700 1.1rem Arial, sans-serif; }
+.brand-logo { display: block; width: 34px; height: 34px; border-radius: 10px; object-fit: contain; background: var(--white); box-shadow: 0 0 0 1px rgba(11, 57, 84, 0.08); }
 .brand strong { display: block; font: 700 1.1rem Arial, sans-serif; letter-spacing: -.03em; }
 .brand small { display: block; margin-top: 2px; color: var(--muted); font: 0.65rem Arial, sans-serif; letter-spacing: .02em; }
 .site-nav { display: flex; align-items: center; gap: 26px; font: 600 .82rem Arial, sans-serif; }

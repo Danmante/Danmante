@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -13,6 +14,7 @@ const links = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
   function closeMenu() {
     setOpen(false);
@@ -22,7 +24,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="site-header-inner">
         <Link href="/" className="brand" onClick={closeMenu} aria-label="Danmante home">
-          <span className="brand-mark" aria-hidden="true">D</span>
+          <Image className="brand-logo" src={`${basePath}/danmante-logo.png`} alt="" width={34} height={34} unoptimized />
           <span>
             <strong>Danmante</strong>
             <small>Healthcare access, connected.</small>
