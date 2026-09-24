@@ -5,6 +5,7 @@
 # Danmante
 
 <p align="center">
+  <a href="https://github.com/Danmante/Danmante/actions/workflows/ci.yml"><img src="https://github.com/Danmante/Danmante/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status" /></a>
   <a href="https://github.com/Danmante/Danmante/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-14.2.35-000000?logo=next.js&logoColor=white" alt="Next.js 14" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.5.4-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5" /></a>
@@ -185,6 +186,16 @@ Review:
 English is the default public language. The routing and content structure is prepared for future expansion into Haitian Creole, French, and Spanish.
 
 Legal and compliance materials are draft guidance, not legal advice. They do not claim HIPAA certification, GDPR certification, FDA approval, government approval, or universal healthcare authorization. External legal, privacy, clinical, security, regulatory, and professional review remains required before regulated deployment.
+
+## Community and support
+
+Danmante is designed to be transparent, safe, and contributor-friendly. We welcome thoughtful issues, pull requests, and ideas that improve the project without overstating readiness or misrepresenting clinical safety.
+
+Please review:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- [SECURITY.md](SECURITY.md)
 
 ## License
 

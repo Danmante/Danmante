@@ -1,0 +1,13 @@
+# Default owners for the repository
+# These users are the default maintainers for the project.
+
+* @Danmante/maintainers
+
+# Core product and safety-critical areas
+/app @Danmante/maintainers
+/src @Danmante/maintainers
+/packages @Danmante/maintainers
+/docs @Danmante/maintainers
+
+# GitHub and project governance
+/.github @Danmante/maintainers
