@@ -78,5 +78,6 @@ test("footer exposes legal and emergency pathways", async ({ page }) => {
   await page.goto("/");
   const footer = page.locator("footer");
   await expect(footer.getByRole("link", { name: "Privacy" })).toBeVisible();
+  await expect(footer.getByRole("link", { name: "Email Danmante" })).toHaveAttribute("href", "mailto:danmante2@gmail.com");
   await expect(footer.getByText(/medical emergency/i)).toBeVisible();
 });

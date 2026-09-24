@@ -25,7 +25,7 @@ export function SiteFooter() {
         <div>
           <h2>Company</h2>
           <Link href="/about">About Danmante</Link>
-          <a href="mailto:hello@danmante.org">Contact</a>
+          <a href="mailto:danmante2@gmail.com" aria-label="Email Danmante">danmante2@gmail.com</a>
           <Link href="/about#careers">Careers</Link>
         </div>
         <div>
