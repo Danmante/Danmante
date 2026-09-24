@@ -54,7 +54,7 @@ export async function authRoutes(app: FastifyInstance) {
       throw new DanmanteError("VALIDATION_ERROR", "Invalid registration payload.", 400, parsed.error.flatten());
     }
 
-    const user = registerUser(parsed.data);
+    const user = await registerUser(parsed.data);
     return reply.status(201).send({ message: "Registration successful.", user });
   });
 
@@ -64,12 +64,12 @@ export async function authRoutes(app: FastifyInstance) {
       throw new DanmanteError("VALIDATION_ERROR", "Invalid login payload.", 400, parsed.error.flatten());
     }
 
-    const user = verifyUserCredentials(parsed.data.email, parsed.data.password);
+    const user = await verifyUserCredentials(parsed.data.email, parsed.data.password);
     if (!user) {
       throw new DanmanteError("AUTH_REQUIRED", "Invalid email or password.", 401);
     }
 
-    const session = createSessionForUser(user.id);
+    const session = await createSessionForUser(user.id);
     setAuthCookie(reply, session.id);
 
     return {
@@ -80,7 +80,7 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.post("/api/v1/auth/logout", async (request, reply) => {
     const sessionId = getSessionIdFromRequest(request);
-    const removed = deleteSessionById(sessionId);
+    const removed = await deleteSessionById(sessionId);
     clearAuthCookie(reply);
     return {
       success: removed,
@@ -89,7 +89,7 @@ export async function authRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/v1/auth/me", async (request) => {
-    const user = requireSession(request);
+    const user = await requireSession(request);
     return { user: safeUser(user) };
   });
 
@@ -129,7 +129,7 @@ export async function authRoutes(app: FastifyInstance) {
     }
 
     const requestedRole = roleParam.toUpperCase() as Role;
-    const user = requireRole(request, requestedRole);
+    const user = await requireRole(request, requestedRole);
 
     const dashboardKey = getRoleDashboard(user.role);
     if (dashboardKey !== roleParam) {

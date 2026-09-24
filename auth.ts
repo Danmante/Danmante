@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { DanmanteError } from "./errorCodes";
+import { getDatabasePool } from "./db";
 
 export const AUTH_COOKIE_NAME = "danmante_session";
 export const VALID_ROLES = ["PATIENT", "NURSE", "PHARMACIST", "PHARMACY", "ADMIN"] as const;
@@ -31,6 +32,96 @@ const users = new Map<string, UserRecord>();
 const sessions = new Map<string, SessionRecord>();
 
 const PASSWORD_POLICY = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+function databasePasswordValue(salt: string, hash: string) {
+  return `${salt}:${hash}`;
+}
+
+function parseDatabasePassword(value: string) {
+  const [salt, hash] = value.split(":", 2);
+  return { salt, hash };
+}
+
+function databaseUser(row: Record<string, unknown>): UserRecord {
+  const password = parseDatabasePassword(String(row.password_hash ?? ""));
+  return {
+    id: String(row.id),
+    name: String(row.full_name ?? row.name ?? row.email ?? "User"),
+    email: String(row.email),
+    passwordHash: password.hash,
+    passwordSalt: password.salt,
+    role: String(row.role ?? "patient").toUpperCase() as Role,
+    emailVerified: Boolean(row.email_verified_at),
+    createdAt: row.created_at ? new Date(String(row.created_at)).toISOString() : new Date().toISOString(),
+    updatedAt: row.updated_at ? new Date(String(row.updated_at)).toISOString() : new Date().toISOString(),
+    resetToken: null,
+    resetTokenExpiresAt: null,
+  };
+}
+
+async function getUserByEmailFromDatabase(email: string): Promise<UserRecord | null> {
+  const database = getDatabasePool();
+  if (!database) {
+    return null;
+  }
+
+  const result = await database.query(
+    `SELECT
+       u.id,
+       COALESCE(p.full_name, n.full_name, ph.full_name, u.email) AS full_name,
+       u.email,
+       u.password_hash,
+       u.role,
+       u.email_verified_at,
+       u.created_at,
+       u.updated_at
+     FROM users u
+     LEFT JOIN patients p ON p.id = u.id
+     LEFT JOIN nurses n ON n.id = u.id
+     LEFT JOIN pharmacists ph ON ph.id = u.id
+     WHERE lower(u.email) = lower($1)
+     LIMIT 1`,
+    [String(email).trim().toLowerCase()],
+  );
+
+  if (!result.rows[0]) {
+    return null;
+  }
+
+  return databaseUser(result.rows[0]);
+}
+
+async function getUserByIdFromDatabase(userId: string): Promise<UserRecord | null> {
+  const database = getDatabasePool();
+  if (!database) {
+    return null;
+  }
+
+  const result = await database.query(
+    `SELECT
+       u.id,
+       COALESCE(p.full_name, n.full_name, ph.full_name, u.email) AS full_name,
+       u.email,
+       u.password_hash,
+       u.role,
+       u.email_verified_at,
+       u.created_at,
+       u.updated_at
+     FROM users u
+     LEFT JOIN patients p ON p.id = u.id
+     LEFT JOIN nurses n ON n.id = u.id
+     LEFT JOIN pharmacists ph ON ph.id = u.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [userId],
+  );
+
+  if (!result.rows[0]) {
+    return null;
+  }
+
+  return databaseUser(result.rows[0]);
+}
 
 function isRole(value: unknown): value is Role {
   return typeof value === "string" && VALID_ROLES.includes(value as Role);
@@ -75,7 +166,7 @@ export function hashPassword(password: string, salt = crypto.randomBytes(16).toS
   return { salt, hash };
 }
 
-export function registerUser(input: { name: string; email: string; password: string; role?: string }) {
+export async function registerUser(input: { name: string; email: string; password: string; role?: string }) {
   const name = String(input.name ?? "").trim();
   const email = String(input.email ?? "").trim().toLowerCase();
   if (!name || !email) {
@@ -86,13 +177,37 @@ export function registerUser(input: { name: string; email: string; password: str
   }
   validatePassword(String(input.password ?? ""));
 
+  const role = normalizeRole(input.role);
+  const { salt, hash } = hashPassword(String(input.password));
+
+  const database = getDatabasePool();
+  if (database) {
+    try {
+      const result = await database.query(
+        `INSERT INTO users (email, password_hash, role)
+         VALUES ($1, $2, $3)
+         RETURNING id, email, password_hash, role, created_at, updated_at`,
+        [email, databasePasswordValue(salt, hash), role.toLowerCase()],
+      );
+
+      const created = databaseUser({
+        ...result.rows[0],
+        full_name: name,
+      });
+      return safeUser(created);
+    } catch (error) {
+      if (error && typeof error === "object" && "code" in error && error.code === "23505") {
+        throw new DanmanteError("VALIDATION_ERROR", "An account with that email already exists.", 409);
+      }
+      throw error;
+    }
+  }
+
   if (users.has(email)) {
     throw new DanmanteError("VALIDATION_ERROR", "An account with that email already exists.", 409);
   }
 
-  const role = normalizeRole(input.role);
   const now = new Date().toISOString();
-  const { salt, hash } = hashPassword(String(input.password));
 
   const user: UserRecord = {
     id: crypto.randomUUID(),
@@ -112,7 +227,22 @@ export function registerUser(input: { name: string; email: string; password: str
   return safeUser(user);
 }
 
-export function verifyUserCredentials(email: string, password: string) {
+export async function verifyUserCredentials(email: string, password: string) {
+  const database = getDatabasePool();
+  if (database) {
+    const lookup = await getUserByEmailFromDatabase(email);
+    if (!lookup) {
+      return null;
+    }
+
+    const { hash } = hashPassword(password, lookup.passwordSalt);
+    if (hash !== lookup.passwordHash) {
+      return null;
+    }
+
+    return lookup;
+  }
+
   const lookup = users.get(String(email).trim().toLowerCase());
   if (!lookup) {
     return null;
@@ -124,7 +254,7 @@ export function verifyUserCredentials(email: string, password: string) {
   return lookup;
 }
 
-export function createSessionForUser(userId: string) {
+export async function createSessionForUser(userId: string) {
   const sessionId = crypto.randomUUID();
   const now = new Date();
   const expiresAt = new Date(now.getTime() + 1000 * 60 * 60 * 8);
@@ -136,12 +266,29 @@ export function createSessionForUser(userId: string) {
     expiresAt: expiresAt.toISOString(),
   };
 
+  const database = getDatabasePool();
+  if (database) {
+    await database.query(
+      `INSERT INTO user_sessions (id, user_id, token_hash, expires_at)
+       VALUES ($1, $2, $3, $4)`,
+      [sessionId, userId, crypto.createHash("sha256").update(sessionId).digest("hex"), expiresAt.toISOString()],
+    );
+    return session;
+  }
+
   sessions.set(sessionId, session);
   return session;
 }
 
-export function deleteSessionById(sessionId: string | null | undefined) {
+export async function deleteSessionById(sessionId: string | null | undefined) {
   if (!sessionId) return false;
+
+  const database = getDatabasePool();
+  if (database) {
+    const result = await database.query("DELETE FROM user_sessions WHERE id = $1", [sessionId]);
+    return (result.rowCount ?? 0) > 0;
+  }
+
   const existed = sessions.has(sessionId);
   if (existed) sessions.delete(sessionId);
   return existed;
@@ -163,12 +310,43 @@ export function parseCookieHeader(cookieHeader: string | undefined) {
   return result;
 }
 
-export function requireSession(request: FastifyRequest): UserRecord {
+export async function requireSession(request: FastifyRequest): Promise<UserRecord> {
   const cookieHeader = String((request.headers.cookie as string | undefined) ?? "");
   const cookie = parseCookieHeader(cookieHeader);
   const sessionId = cookie[AUTH_COOKIE_NAME];
   if (!sessionId) {
     throw new DanmanteError("AUTH_REQUIRED", "Authentication is required.", 401);
+  }
+
+  const database = getDatabasePool();
+  if (database) {
+    const result = await database.query(
+      `SELECT
+         us.id,
+         us.user_id,
+         us.expires_at,
+         COALESCE(p.full_name, n.full_name, ph.full_name, u.email) AS full_name,
+         u.email,
+         u.password_hash,
+         u.role,
+         u.email_verified_at,
+         u.created_at,
+         u.updated_at
+       FROM user_sessions us
+       JOIN users u ON u.id = us.user_id
+       LEFT JOIN patients p ON p.id = u.id
+       LEFT JOIN nurses n ON n.id = u.id
+       LEFT JOIN pharmacists ph ON ph.id = u.id
+       WHERE us.id = $1 AND us.revoked_at IS NULL AND us.expires_at > now()
+       LIMIT 1`,
+      [sessionId],
+    );
+
+    if (!result.rows[0]) {
+      throw new DanmanteError("AUTH_REQUIRED", "Your session is invalid or expired.", 401);
+    }
+
+    return databaseUser(result.rows[0]);
   }
 
   const session = sessions.get(sessionId);
@@ -190,8 +368,8 @@ export function requireSession(request: FastifyRequest): UserRecord {
   return user;
 }
 
-export function requireRole(request: FastifyRequest, expectedRole: Role | Role[]) {
-  const user = requireSession(request);
+export async function requireRole(request: FastifyRequest, expectedRole: Role | Role[]) {
+  const user = await requireSession(request);
   const allowed = Array.isArray(expectedRole) ? expectedRole : [expectedRole];
   if (user.role === "ADMIN" || allowed.includes(user.role)) {
     return user;
