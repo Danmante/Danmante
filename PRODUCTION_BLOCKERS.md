@@ -2,8 +2,8 @@
 
 ## Engineering blockers
 
-- Real authentication and MFA implementation is not in place.
-- No confirmed server-side authorization layer exists for patient, nurse, pharmacy, and admin workflows.
+- Authentication and server-side RBAC foundations are implemented, but they still use an in-memory adapter and do not provide production MFA.
+- Patient, nurse, pharmacy, and admin workflows beyond access control are not operational.
 - The repository is a buildable foundation, not a complete health platform backend.
 - Real telehealth, consultation, pharmacy fulfillment, and payment services remain unimplemented.
 
@@ -11,7 +11,7 @@
 
 - Dependency audit still reports notable vulnerabilities in the current toolchain and must be resolved or explicitly accepted with full review.
 - No full secret-scanning, vulnerability review, or penetration test has been completed.
-- No production-grade secret management pipeline is in place.
+- No production-grade secret management pipeline is in place, and password recovery email delivery is not connected.
 
 ## Clinical blockers
 

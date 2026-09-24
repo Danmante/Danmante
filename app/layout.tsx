@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://danmante.github.io/Danmante"),
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary", title: "Danmante | Healthcare access, connected.", description: "A jurisdiction-aware digital health foundation for safer access and professional workflows." },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>{children}</body>

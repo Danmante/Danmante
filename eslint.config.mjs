@@ -5,7 +5,7 @@ import globals from "globals";
 
 export default [
   {
-    ignores: ["node_modules/**", ".next/**", "dist/**"],
+    ignores: ["node_modules/**", ".next/**", "out/**", "dist/**"],
   },
   js.configs.recommended,
   {

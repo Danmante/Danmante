@@ -4,8 +4,10 @@ import helmet from "@fastify/helmet";
 import rateLimit from "@fastify/rate-limit";
 import { loadConfig } from "./config";
 import { healthRoutes } from "./routes/health";
+import { authRoutes } from "./routes/auth";
 import { jurisdictionRoutes } from "./routes/jurisdictions";
 import { DanmanteError } from "./errorCodes";
+import { closeDatabase } from "./db";
 
 export async function createApp(config = loadConfig()): Promise<FastifyInstance> {
   const app = Fastify({ logger: false, trustProxy: false });
@@ -26,6 +28,10 @@ export async function createApp(config = loadConfig()): Promise<FastifyInstance>
   });
 
   await app.register(healthRoutes);
+  await app.register(authRoutes);
   await app.register(jurisdictionRoutes);
+  app.addHook("onClose", async () => {
+    await closeDatabase();
+  });
   return app;
 }

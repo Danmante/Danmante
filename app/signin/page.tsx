@@ -1,6 +1,43 @@
 import Link from "next/link";
-import { PageFrame } from "../components/page-frame";
 
 export default function SignInPage() {
-  return <PageFrame><main className="content-shell"><section className="page-hero"><p className="eyebrow">Account access</p><h1>Start with the right workspace.</h1><p className="lede">Authentication is prepared as a role-aware entry point. Live sign-in, MFA, sessions, and account recovery require the backend identity service.</p></section><section className="audience-grid"><Link href="/patient" className="audience-card patient-card"><span className="card-kicker">Patient</span><h3>Find care and manage your journey.</h3><span className="card-arrow" aria-hidden="true">-&gt;</span></Link><Link href="/nurse" className="audience-card nurse-card"><span className="card-kicker">Nurse</span><h3>Prepare for professional access.</h3><span className="card-arrow" aria-hidden="true">-&gt;</span></Link><Link href="/pharmacy" className="audience-card pharmacy-card"><span className="card-kicker">Pharmacy</span><h3>Prepare for verified fulfillment.</h3><span className="card-arrow" aria-hidden="true">-&gt;</span></Link></section></main></PageFrame>;
+  return (
+    <main className="auth-shell">
+      <div className="auth-grid">
+        <section className="auth-panel">
+          <p className="eyebrow">Account access</p>
+          <h1>Start with the right workspace.</h1>
+          <p className="lede">Use Danmante to sign in, create an account, or recover access to your role-based healthcare portal.</p>
+
+          <div className="cta-row" style={{ marginTop: 28 }}>
+            <Link href="/login" className="button primary">Sign in</Link>
+            <Link href="/register" className="button secondary">Create account</Link>
+          </div>
+
+          <div className="auth-alternative" style={{ justifyContent: "flex-start" }}>
+            <Link href="/forgot-password">Forgot password?</Link>
+          </div>
+        </section>
+
+        <aside className="auth-panel">
+          <p className="eyebrow">Role selection</p>
+          <h2>Choose your path</h2>
+          <div className="audience-grid" style={{ gridTemplateColumns: "1fr", gap: 14, marginTop: 18 }}>
+            <Link href="/dashboard" className="audience-card patient-card" style={{ minHeight: 120, padding: 20 }}>
+              <span className="card-kicker">Patient</span>
+              <h3 style={{ marginTop: 18 }}>Access your care dashboard.</h3>
+            </Link>
+            <Link href="/dashboard" className="audience-card nurse-card" style={{ minHeight: 120, padding: 20 }}>
+              <span className="card-kicker">Nurse</span>
+              <h3 style={{ marginTop: 18 }}>Access clinical operations.</h3>
+            </Link>
+            <Link href="/dashboard" className="audience-card pharmacy-card" style={{ minHeight: 120, padding: 20 }}>
+              <span className="card-kicker">Pharmacy</span>
+              <h3 style={{ marginTop: 18 }}>Access fulfillment and verification.</h3>
+            </Link>
+          </div>
+        </aside>
+      </div>
+    </main>
+  );
 }

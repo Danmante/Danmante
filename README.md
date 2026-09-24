@@ -44,6 +44,7 @@ The repository includes a public static website, a safety-first architecture, a 
 - Safety and trust content layers
 - Jurisdiction rules foundation and regression tests
 - API scaffold, database schema, and app factory patterns
+- Authentication foundation with secure password hashing, sessions, RBAC guards, recovery flow, and protected dashboard routes
 - CI and deployment automation
 
 ### Prepared
@@ -55,7 +56,8 @@ The repository includes a public static website, a safety-first architecture, a 
 
 ### Not yet implemented
 
-- Production authentication and RBAC
+- Database-backed authentication sessions and token persistence
+- Transactional email delivery for verification and recovery
 - Real patient records or PHI handling
 - Clinical consultations, documentation, or prescribing workflows
 - Payment provider integrations
@@ -102,7 +104,9 @@ See [PRODUCTION_BLOCKERS.md](PRODUCTION_BLOCKERS.md) and [docs/PRODUCTION_READIN
 - `packages/jurisdiction/`: reusable jurisdiction package
 - `packages/security/`: security foundations
 - `server.ts`, `routes/`, `app.ts`: API and app scaffolding
-- `schema.sql`, `0001_init.sql`: database foundation
+- `schema.sql`, `0001_init.sql`, `0002_auth_sessions.sql`: database and authentication persistence foundation
+- `migrations/run.ts`: transactional migration runner
+- `docs/api/openapi.yaml`: API contract for health, auth, dashboard, and jurisdiction endpoints
 - `tests/`, `engine.test.ts`: verification and regression coverage
 - `docs/`: architecture, operations, compliance, and readiness documentation
 
@@ -139,6 +143,7 @@ npm run typecheck
 npm test
 npm run test:e2e
 npm run build
+npm run db:migrate # requires DATABASE_URL and a reachable PostgreSQL instance
 ```
 
 Static export for GitHub Pages:
@@ -146,6 +151,9 @@ Static export for GitHub Pages:
 ```bash
 npm run build:pages
 ```
+
+Security automation runs in [.github/workflows/security.yml](.github/workflows/security.yml)
+and includes dependency review, npm audit reporting, and CodeQL analysis.
 
 ## GitHub Pages deployment
 

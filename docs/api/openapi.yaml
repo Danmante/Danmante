@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: Danmante API
+  version: 0.1.0
+  description: Safety-first API foundation for Danmante. Clinical and regulated workflows remain disabled until external review.
+servers:
+  - url: http://localhost:4000
+    description: Local API
+paths:
+  /health/live:
+    get:
+      operationId: getLiveness
+      responses:
+        '200':
+          description: Process is running
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /health/ready:
+    get:
+      operationId: getReadiness
+      responses:
+        '200':
+          description: Dependencies are ready
+        '503':
+          description: One or more dependencies are unavailable
+  /api/v1/auth/register:
+    post:
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Account created
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: Account already exists
+  /api/v1/auth/login:
+    post:
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Session created; an HttpOnly session cookie is returned
+        '401':
+          $ref: '#/components/responses/AuthError'
+  /api/v1/auth/logout:
+    post:
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Session revoked and cookie cleared
+  /api/v1/auth/me:
+    get:
+      operationId: getCurrentUser
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Current authenticated user
+        '401':
+          $ref: '#/components/responses/AuthError'
+  /api/v1/auth/forgot-password:
+    post:
+      operationId: requestPasswordReset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Generic response that does not disclose account existence
+  /api/v1/auth/reset-password:
+    post:
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Password changed
+        '400':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/dashboard/{role}:
+    get:
+      operationId: getRoleDashboard
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: role
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [patient, nurse, pharmacist, pharmacy, admin]
+      responses:
+        '200':
+          description: Authorized role dashboard
+        '401':
+          $ref: '#/components/responses/AuthError'
+        '403':
+          description: Authenticated user is not authorized for this dashboard
+  /api/v1/jurisdictions/check:
+    get:
+      operationId: checkJurisdiction
+      parameters:
+        - name: country
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+        - name: region
+          in: query
+          schema:
+            type: string
+        - name: consultationType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [video, audio, message]
+      responses:
+        '200':
+          description: Fail-closed jurisdiction decision
+        '400':
+          $ref: '#/components/responses/ValidationError'
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: danmante_session
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          minLength: 2
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+        role:
+          type: string
+          enum: [PATIENT, NURSE, PHARMACIST, PHARMACY]
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+  responses:
+    AuthError:
+      description: Authentication is required or credentials are invalid
+    ValidationError:
+      description: Request failed validation

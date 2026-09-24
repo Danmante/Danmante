@@ -22,6 +22,23 @@ Required private services include:
 - verification integrations and review operations
 - observability, alerting, incident response, and restore testing
 
+## Local backend startup
+
+```bash
+docker compose up -d postgres redis
+npm run db:migrate
+npm run api
+```
+
+The migration runner applies numbered root migrations transactionally and records
+completed files in `schema_migrations`. Never edit an already-applied migration;
+add the next numbered migration instead.
+
+The API exposes `/health/live` for process liveness and `/health/ready` for
+dependency readiness. PostgreSQL is required for readiness; Redis remains optional
+until a feature explicitly depends on it, and a configured-but-unwired Redis URL
+keeps readiness negative.
+
 ## Environment rules
 
 Never place `DATABASE_URL`, service-role keys, JWT secrets, encryption keys, payment secrets, or private wallet keys in the static frontend. Use the environment examples as naming references only; real production values must come from a managed secret store.
